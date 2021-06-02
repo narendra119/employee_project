@@ -1,0 +1,17 @@
+terminal
+
+python
+
+django - flask
+
+
+vscode(IDE) - pythcharm
+    - editor
+    - compiler
+    - debug
+    - execute
+
+settings.py --> complete project config details
+models.py --> complete database, data informations, data modelling, database mapping, models
+views.py --> complete code, crud operations, business logic
+urls.py --> map user url with views 
