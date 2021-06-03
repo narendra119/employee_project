@@ -20,11 +20,9 @@ class Employee(models.Model):
         return self.name
 
 class City(models.Model):
-    METRO_OPT=(
-        ('y','yes'),
-        ('n','no')
-    )
-    
+ 
     name=models.CharField(max_length=100)
-    metro=models.CharField(max_length=1, choices=METRO_OPT)
+    metro=models.BooleanField()
+    population=models.IntegerField()
+    engieering_colleges=models.IntegerField()
     
