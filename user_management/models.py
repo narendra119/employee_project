@@ -24,5 +24,7 @@ class City(models.Model):
     name=models.CharField(max_length=100)
     metro=models.BooleanField()
     population=models.IntegerField()
-    engieering_colleges=models.IntegerField()
-    
+    engieering_colleges_count=models.IntegerField()
+
+    def __str__(self):
+        return self.engieering_colleges_count
