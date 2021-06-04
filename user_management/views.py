@@ -54,3 +54,9 @@ class EmployeesDetailView(generics.GenericAPIView):
         temp['gender'] = emp.gender
 
         return Response(temp, status=status.HTTP_200_OK)
+
+    def delete(self, request,id,*args, **kwargs):
+        emp = self.get_queryset(id)
+        
+        print(type(emp))
+        return Response('deactivate', status=status.HTTP_200_OK)
