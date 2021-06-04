@@ -10,14 +10,16 @@ class Employee(models.Model):
         ('F', 'FEMALE'),
         ('O', 'OTHER')
     )
+    
     emp_id = models.IntegerField(blank=False, unique=True)
     name = models.CharField(max_length=255)
     age = models.IntegerField()
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
-
+    
     def __str__(self):
         return self.name
 
+<<<<<<< HEAD
 class Organisation(models.Model):
     headQuarters=models.CharField(max_length=50)
     branch=models.CharField(max_length=20)
@@ -32,3 +34,14 @@ class Meta:
     order_with_respect_to='Organisation'
     def __str__ (self):
         return self.employee_Name
+=======
+class City(models.Model):
+ 
+    name=models.CharField(max_length=100)
+    metro=models.BooleanField()
+    population=models.IntegerField()
+    engieering_colleges_count=models.IntegerField()
+
+    def __str__(self):
+        return self.engieering_colleges_count
+>>>>>>> 2c84930ea6d526e527591f905f1ea9186996133f
