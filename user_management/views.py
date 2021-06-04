@@ -25,6 +25,20 @@ class EmployeesDetails(generics.GenericAPIView):
            emp_dct.append(temp)
         return Response(emp_dct, status=status.HTTP_200_OK)
     
+    def post(self, request, *args, **kwargs):
+        query_params = request.query_params
+
+        name = query_params.get('name')
+        age = query_params.get('age')
+        emp_id = query_params.get('emp_id')
+        gender = query_params.get('gender')
+
+        emp_instance = Employee.objects.create(name=name, emp_id=emp_id, gender=gender, age=age)
+        emp_instance.save()
+
+        return Response('employee created successfully', status=status.HTTP_201_CREATED)
+
+    
 
 class EmployeesDetailView(generics.GenericAPIView):
     def get_queryset(self,id):
