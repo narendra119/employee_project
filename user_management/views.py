@@ -1,7 +1,8 @@
 from django.shortcuts import render
-from rest_framework import generics, status
+from rest_framework import status
 from rest_framework.response import Response
 from user_management.models import Employee
+from rest_framework.views import APIView
 # Create your views here
 # Actual Business Logic
 # CRUD ---> Create(http method is POST)
@@ -9,7 +10,7 @@ from user_management.models import Employee
 # CRUD ---> Update(http method is PUT/PATCH)
 # CRUD ---> Delete(http method is DELETE)
 
-class EmployeesDetails(generics.GenericAPIView):
+class EmployeesDetails(APIView):
     def get_queryset(self):
         return Employee.objects.all()
 
@@ -40,7 +41,7 @@ class EmployeesDetails(generics.GenericAPIView):
 
     
 
-class EmployeesDetailView(generics.GenericAPIView):
+class EmployeesDetailView(APIView):
     def get_queryset(self,id):
         return Employee.objects.get(id=id)
 
@@ -63,3 +64,14 @@ class EmployeesDetailView(generics.GenericAPIView):
         
         print(type(emp))
         return Response('deactivate', status=status.HTTP_200_OK)
+
+    def put(self, request,id,*args, **kwargs):
+        emp = self.get_queryset(id)
+
+        age=request.data['age']
+        name=request.data['test']
+
+        emp.age=age
+        emp.name=name
+        emp.save()
+        return Response('Details Updated', status=status.HTTP_200_OK)
