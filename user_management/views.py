@@ -40,3 +40,6 @@ class EmployeesDetailView(generics.GenericAPIView):
         temp['gender'] = emp.gender
 
         return Response(temp, status=status.HTTP_200_OK)
+    
+    def check(self):
+        return "hello hi"
