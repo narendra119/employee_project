@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
-from user_management.models import Employee
+from user_management.models import Employee, Organisation
 from rest_framework.views import APIView
 # Create your views here
 # Actual Business Logic
@@ -46,15 +46,22 @@ class EmployeesDetailView(APIView):
         return Employee.objects.get(id=id)
 
     def get(self, request, id, *args, **kwargs):
-        emp = self.get_queryset(id)
-
         temp = {}
-        temp['emp_id'] = emp.emp_id
-        temp['name'] = emp.name
-        temp['age'] = emp.age
-        temp['gender'] = emp.gender
+        try:
+            emp = Employee.objects.get(id=id)
+            temp['emp_id'] = emp.emp_id
+            temp['name'] = emp.name
+            temp['age'] = emp.age
+            temp['gender'] = emp.gender
+        
+        except Employee.DoesNotExist as e:
+            temp['error'] = "chusukovale ga bro"
+            
+            return Response(temp, status=status.HTTP_404_NOT_FOUND)
 
         return Response(temp, status=status.HTTP_200_OK)
+
+    
     
     def check(self):
         return "hello hi"
@@ -66,12 +73,63 @@ class EmployeesDetailView(APIView):
         return Response('deactivate', status=status.HTTP_200_OK)
 
     def put(self, request,id,*args, **kwargs):
-        emp = self.get_queryset(id)
 
         age=request.data['age']
         name=request.data['test']
+        # import ipdb; ipdb.set_trace()
+        try:
+            emp = Employee.objects.get(id=id)
+            emp.age=age
+            emp.name=name
+            emp.save()
+            print("Employee updated")
+        except Employee.DoesNotExist:
+            result = {}
+            result["error"]=f"Kallu mingaya {id} ledhu"
+            return Response(result, status=status.HTTP_404_NOT_FOUND)
 
-        emp.age=age
-        emp.name=name
-        emp.save()
+
         return Response('Details Updated', status=status.HTTP_200_OK)
+
+class OrganisationDetails(APIView):
+
+    def get_queryset(self,id):
+        return Organisation.objects.get(id=id)
+    
+    def get(self,request,id,*args,**kwargs):
+        org = self.get_queryset(id)
+        
+        emporg = {}
+        emporg["headQuarters"] = org.headQuarters
+        emporg["branch"] = org.branch
+        emporg["branch_Address"] = org.branch_Address
+        emporg["employee_ID"] = org.employee_ID
+        emporg["employee_Name"] = org.employee_Name
+        emporg["performance"] = org.performance
+        
+        return Response(emporg,status=status.HTTP_200_OK)
+
+    def put(self,request,id,*args,**kwargs):
+        org = self.get_queryset(id)
+
+        branch = request.data["branch"]
+        performance=request.data["performance"]
+
+        org.branch=branch
+        org.performance=performance
+        org.save()
+
+        change = {
+            branch,
+            performance
+        }
+
+        return Response('Details Updated',change, status=status.HTTP_200_OK)
+
+
+
+
+
+
+
+
