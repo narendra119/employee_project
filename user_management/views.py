@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from user_management.models import Employee, Organisation
 from rest_framework.views import APIView
+from .serializers import EmployeeSerializer
 # Create your views here
 # Actual Business Logic
 # CRUD ---> Create(http method is POST)
@@ -16,15 +17,18 @@ class EmployeesDetails(APIView):
 
     def get(self, request, *args, **kwargs):
         emp_qs = self.get_queryset()
-        emp_dct = [] 
-        for emp in emp_qs:
-           temp = {}
-           temp['emp_id'] = emp.emp_id
-           temp['name'] = emp.name
-           temp['age'] = emp.age
-           temp['gender'] = emp.gender
-           emp_dct.append(temp)
-        return Response(emp_dct, status=status.HTTP_200_OK)
+        emp_ser=EmployeeSerializer(emp_qs, many=True)
+        result=emp_ser.data
+        # emp_dct = [] 
+        # for emp in emp_qs:
+        #    temp = {}
+        #    temp['emp_id'] = emp.emp_id
+        #    temp['name'] = emp.name
+        #    temp['age'] = emp.age
+        #    temp['gender'] = emp.gender
+        #    emp_dct.append(temp)
+
+        return Response(result, status=status.HTTP_200_OK)
     
     def post(self, request, *args, **kwargs):
         query_params = request.query_params
@@ -46,20 +50,22 @@ class EmployeesDetailView(APIView):
         return Employee.objects.get(id=id)
 
     def get(self, request, id, *args, **kwargs):
-        temp = {}
+        #temp = {}
         try:
             emp = Employee.objects.get(id=id)
-            temp['emp_id'] = emp.emp_id
-            temp['name'] = emp.name
-            temp['age'] = emp.age
-            temp['gender'] = emp.gender
+            emp_ser=EmployeeSerializer(emp)
+            data=emp_ser.data
+            # temp['emp_id'] = emp.emp_id
+            # temp['name'] = emp.name
+            # temp['age'] = emp.age
+            # temp['gender'] = emp.gender
         
         except Employee.DoesNotExist as e:
             temp['error'] = "chusukovale ga bro"
             
             return Response(temp, status=status.HTTP_404_NOT_FOUND)
 
-        return Response(temp, status=status.HTTP_200_OK)
+        return Response(data, status=status.HTTP_200_OK)
 
     
     
@@ -69,7 +75,7 @@ class EmployeesDetailView(APIView):
     def delete(self, request,id,*args, **kwargs):
         emp = self.get_queryset(id)
         
-        print(type(emp))
+        
         return Response('deactivate', status=status.HTTP_200_OK)
 
     def put(self, request,id,*args, **kwargs):
@@ -82,7 +88,7 @@ class EmployeesDetailView(APIView):
             emp.age=age
             emp.name=name
             emp.save()
-            print("Employee updated")
+            
         except Employee.DoesNotExist:
             result = {}
             result["error"]=f"Kallu mingaya {id} ledhu"
