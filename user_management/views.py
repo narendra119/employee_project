@@ -67,10 +67,6 @@ class EmployeesDetailView(APIView):
 
         return Response(data, status=status.HTTP_200_OK)
 
-    
-    
-    def check(self):
-        return "hello hi"
 
     def delete(self, request,id,*args, **kwargs):
         emp = self.get_queryset(id)
